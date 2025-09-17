@@ -116,6 +116,7 @@ C:\Users\phucb\Documents\Code\vs-dotNET\QuanLyQuanNet\QuanLyQuanNet\obj\Debug\ne
 C:\Users\phucb\Documents\Code\vs-dotNET\QuanLyQuanNet\QuanLyQuanNet\obj\Debug\net9.0-windows\QuanLyQuanNet.AssemblyInfoInputs.cache
 C:\Users\phucb\Documents\Code\vs-dotNET\QuanLyQuanNet\QuanLyQuanNet\obj\Debug\net9.0-windows\QuanLyQuanNet.AssemblyInfo.cs
 C:\Users\phucb\Documents\Code\vs-dotNET\QuanLyQuanNet\QuanLyQuanNet\obj\Debug\net9.0-windows\QuanLyQuanNet.csproj.CoreCompileInputs.cache
+C:\Users\phucb\Documents\Code\vs-dotNET\QuanLyQuanNet\QuanLyQuanNet\obj\Debug\net9.0-windows\QuanLyQuanNet.sourcelink.json
 C:\Users\phucb\Documents\Code\vs-dotNET\QuanLyQuanNet\QuanLyQuanNet\obj\Debug\net9.0-windows\QuanLyQu.82CE61FD.Up2Date
 C:\Users\phucb\Documents\Code\vs-dotNET\QuanLyQuanNet\QuanLyQuanNet\obj\Debug\net9.0-windows\QuanLyQuanNet.dll
 C:\Users\phucb\Documents\Code\vs-dotNET\QuanLyQuanNet\QuanLyQuanNet\obj\Debug\net9.0-windows\refint\QuanLyQuanNet.dll

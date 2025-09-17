@@ -1,6 +1,8 @@
 using QuanLyQuanNet.Data;
 using QuanLyQuanNet.Data.Repositories;
 using QuanLyQuanNet.Services;
+using QuanLyQuanNet.Utils;
+using Microsoft.EntityFrameworkCore;
 
 namespace QuanLyQuanNet.Forms
 {
@@ -10,27 +12,72 @@ namespace QuanLyQuanNet.Forms
 
         public FormLogin()
         {
-            InitializeComponent();
-            
-            // Initialize services
-            var dbContext = new QuanNetDbContext();
-            var nhanVienRepository = new NhanVienRepository(dbContext);
-            _authService = new AuthenticationService(nhanVienRepository);
+            try
+            {
+                Console.WriteLine("Initializing FormLogin...");
+                InitializeComponent();
+                Console.WriteLine("InitializeComponent completed");
+                
+                // Initialize services
+                Console.WriteLine("Creating DbContext...");
+                var dbContext = new QuanNetDbContext();
+                Console.WriteLine("Creating NhanVienRepository...");
+                var nhanVienRepository = new NhanVienRepository(dbContext);
+                Console.WriteLine("Creating AuthenticationService...");
+                _authService = new AuthenticationService(nhanVienRepository);
+                Console.WriteLine("Services initialized successfully");
 
-            // Set default values for testing
-            txtUsername.Text = "admin";
-            txtPassword.Text = "admin123";
+                // Set default values for testing
+                txtUsername.Text = "admin";
+                txtPassword.Text = "admin123";
 
-            // Add Enter key handling
-            this.AcceptButton = btnLogin;
-            txtPassword.KeyPress += TxtPassword_KeyPress;
+                // Add Enter key handling
+                this.AcceptButton = btnLogin;
+                txtPassword.KeyPress += TxtPassword_KeyPress;
+                
+                Console.WriteLine("FormLogin initialization completed");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in FormLogin constructor: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        private async Task InitializeDatabaseAsync()
+        {
+            try
+            {
+                using var context = new QuanNetDbContext();
+                await context.Database.EnsureCreatedAsync();
+                
+                // Check if admin user exists with proper password hash
+                var admin = await context.NhanViens.FirstOrDefaultAsync(n => n.Username == "admin");
+                if (admin != null)
+                {
+                    // Test if current hash works
+                    bool hashWorks = PasswordHelper.VerifyPassword("admin123", admin.PasswordHash);
+                    if (!hashWorks)
+                    {
+                        // Update with correct hash
+                        admin.PasswordHash = PasswordHelper.HashPassword("admin123");
+                        await context.SaveChangesAsync();
+                        Console.WriteLine("Updated admin password hash");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Database initialization error: {ex.Message}");
+            }
         }
 
         private void TxtPassword_KeyPress(object? sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
-                btnLogin_Click(sender, e);
+                btnLogin_Click(this, e);
             }
         }
 
@@ -56,6 +103,13 @@ namespace QuanLyQuanNet.Forms
                 btnLogin.Enabled = false;
                 btnLogin.Text = "Đang xử lý...";
                 lblMessage.Text = "";
+
+                // Test database connection first
+                using var testContext = new QuanNetDbContext();
+                await testContext.Database.EnsureCreatedAsync();
+
+                // Initialize database if needed
+                await InitializeDatabaseAsync();
 
                 var user = await _authService.LoginAsync(txtUsername.Text.Trim(), txtPassword.Text);
 

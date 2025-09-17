@@ -77,6 +77,9 @@ namespace QuanLyQuanNet.Data
 
         private void SeedData(ModelBuilder modelBuilder)
         {
+            // Hash cố định cho password "admin123" 
+            string defaultPasswordHash = "$2a$11$vKGFJQfMQlr4JqLDwJCNHOPd.K0e2VVcvEOWzLOCpB6B2UzFRe3LG";
+
             // Seed NhanVien (Admin default)
             modelBuilder.Entity<NhanVien>().HasData(
                 new NhanVien
@@ -85,11 +88,35 @@ namespace QuanLyQuanNet.Data
                     HoTen = "Admin",
                     ChucVu = ChucVu.QuanTriVien,
                     Username = "admin",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin123"), // Sử dụng BCrypt để hash password
+                    PasswordHash = defaultPasswordHash,
                     CaLamViec = "Toàn thời gian",
                     NgayVaoLam = DateTime.Now,
                     TrangThai = true,
                     Luong = 0
+                },
+                new NhanVien
+                {
+                    NhanVienID = 2,
+                    HoTen = "Nguyễn Văn Nam",
+                    ChucVu = ChucVu.QuanLy,
+                    Username = "quanly1",
+                    PasswordHash = defaultPasswordHash,
+                    CaLamViec = "Ca sáng",
+                    NgayVaoLam = DateTime.Now,
+                    TrangThai = true,
+                    Luong = 8000000
+                },
+                new NhanVien
+                {
+                    NhanVienID = 3,
+                    HoTen = "Trần Thị Lan",
+                    ChucVu = ChucVu.NhanVien,
+                    Username = "nhanvien1",
+                    PasswordHash = defaultPasswordHash,
+                    CaLamViec = "Ca chiều",
+                    NgayVaoLam = DateTime.Now,
+                    TrangThai = true,
+                    Luong = 5000000
                 }
             );
 
