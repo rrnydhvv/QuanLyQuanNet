@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using QuanLyQuanNet.Models;
 using QuanLyQuanNet.Services;
+using QuanLyQuanNet.Data.Repositories;
 
 namespace QuanLyQuanNet.Forms
 {
@@ -164,30 +165,60 @@ namespace QuanLyQuanNet.Forms
 
         private void nhânViênToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO: Implement FormQuanLyNhanVien
-            MessageBox.Show("Chức năng quản lý nhân viên đang được phát triển!", "Thông báo", 
-                           MessageBoxButtons.OK, MessageBoxIcon.Information);
+            try
+            {
+                var nhanVienRepository = Program.ServiceProvider?.GetService<INhanVienRepository>();
+
+                if (nhanVienRepository != null)
+                {
+                    var formNhanVien = new FormQuanLyNhanVien(_authService, nhanVienRepository);
+                    formNhanVien.ShowDialog();
+                }
+                else
+                {
+                    MessageBox.Show("Không thể khởi tạo form quản lý nhân viên!", "Lỗi", 
+                                  MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi mở form quản lý nhân viên: {ex.Message}", "Lỗi", 
+                              MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnQuanLyNhanVien_Click(object sender, EventArgs e)
         {
-            // TODO: Implement FormQuanLyNhanVien
-            MessageBox.Show("Chức năng quản lý nhân viên đang được phát triển!", "Thông báo", 
-                           MessageBoxButtons.OK, MessageBoxIcon.Information);
+            nhânViênToolStripMenuItem_Click(sender, e);
         }
 
         private void thốngKêToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO: Implement FormThongKe
-            MessageBox.Show("Chức năng thống kê đang được phát triển!", "Thông báo", 
-                           MessageBoxButtons.OK, MessageBoxIcon.Information);
+            try
+            {
+                var hoaDonService = Program.ServiceProvider?.GetService<IHoaDonService>();
+                var quanLyMayService = Program.ServiceProvider?.GetService<IQuanLyMayService>();
+                var dichVuService = Program.ServiceProvider?.GetService<IDichVuService>();
+
+                if (hoaDonService != null && quanLyMayService != null && dichVuService != null)
+                {
+                    var formThongKe = new FormThongKe(_authService, hoaDonService, quanLyMayService, dichVuService);
+                    formThongKe.ShowDialog();
+                }
+                else
+                {
+                    MessageBox.Show("Không thể khởi tạo form thống kê!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi mở form thống kê: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnThongKe_Click(object sender, EventArgs e)
         {
-            // TODO: Implement FormThongKe
-            MessageBox.Show("Chức năng thống kê đang được phát triển!", "Thông báo", 
-                           MessageBoxButtons.OK, MessageBoxIcon.Information);
+            thốngKêToolStripMenuItem_Click(sender, e);
         }
 
         private void tạoHóaĐơnToolStripMenuItem_Click(object sender, EventArgs e)
