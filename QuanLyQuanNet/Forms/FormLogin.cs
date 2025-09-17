@@ -83,7 +83,7 @@ namespace QuanLyQuanNet.Forms
 
                     // Open main form
                     this.Hide();
-                    var mainForm = new FormMain(_authService);
+                    var mainForm = new FormMain(_authService, Program.ServiceProvider!);
                     mainForm.FormClosed += (s, args) => this.Close();
                     mainForm.Show();
                 }

@@ -16,7 +16,7 @@ namespace QuanLyQuanNet
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static async Task Main()
         {
             try
             {
@@ -33,7 +33,7 @@ namespace QuanLyQuanNet
                 Console.WriteLine("Services configured successfully");
                 
                 // Initialize database
-                InitializeDatabase();
+                await InitializeDatabase();
                 
                 var loginForm = new FormLogin();
                 Console.WriteLine("Login form created successfully");
@@ -51,21 +51,28 @@ namespace QuanLyQuanNet
             }
         }
 
-        private static void InitializeDatabase()
+        private static async Task InitializeDatabase()
         {
             try
             {
                 using var scope = ServiceProvider?.CreateScope();
-                var context = scope?.ServiceProvider.GetRequiredService<QuanNetDbContext>();
+                var contextFactory = scope?.ServiceProvider.GetRequiredService<IDbContextFactory<QuanNetDbContext>>();
                 
-                if (context != null)
+                if (contextFactory != null)
                 {
+                    using var context = await contextFactory.CreateDbContextAsync();
                     Console.WriteLine("Checking database...");
-                    context.Database.EnsureCreated();
+                    await context.Database.EnsureCreatedAsync();
                     Console.WriteLine("Database initialized successfully");
                     
+                    // Update database schema for missing columns
+                    UpdateDatabaseSchema(context);
+                    
                     // Seed default data if needed
-                    SeedDefaultData(context);
+                    await SeedDefaultData(context);
+                    
+                    // Create some test data for invoice demo
+                    await CreateTestDataForInvoice(context);
                 }
             }
             catch (Exception ex)
@@ -75,7 +82,46 @@ namespace QuanLyQuanNet
             }
         }
 
-        private static void SeedDefaultData(QuanNetDbContext context)
+        private static void UpdateDatabaseSchema(QuanNetDbContext context)
+        {
+            try
+            {
+                Console.WriteLine("Updating database schema...");
+                
+                // Execute SQL commands to add missing columns
+                var updateScript = @"
+                    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'HoaDon' AND COLUMN_NAME = 'NgayThanhToan')
+                    BEGIN
+                        ALTER TABLE HoaDon ADD NgayThanhToan DATETIME2 NULL;
+                    END
+
+                    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'HoaDon' AND COLUMN_NAME = 'TienKhachDua')
+                    BEGIN
+                        ALTER TABLE HoaDon ADD TienKhachDua DECIMAL(18,2) NOT NULL DEFAULT 0;
+                    END
+
+                    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'HoaDon' AND COLUMN_NAME = 'TienThua')
+                    BEGIN
+                        ALTER TABLE HoaDon ADD TienThua DECIMAL(18,2) NOT NULL DEFAULT 0;
+                    END
+
+                    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'HoaDon' AND COLUMN_NAME = 'PhuongThucThanhToan')
+                    BEGIN
+                        ALTER TABLE HoaDon ADD PhuongThucThanhToan NVARCHAR(50) NOT NULL DEFAULT N'Tiền mặt';
+                    END
+                ";
+
+                context.Database.ExecuteSqlRaw(updateScript);
+                Console.WriteLine("Database schema updated successfully");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Warning: Could not update database schema: {ex.Message}");
+                // Don't throw - this is not critical if the columns already exist
+            }
+        }
+
+        private static async Task SeedDefaultData(QuanNetDbContext context)
         {
             try
             {
@@ -193,12 +239,59 @@ namespace QuanLyQuanNet
                     context.NhanViens.AddRange(nhanViens);
                 }
 
-                context.SaveChanges();
+                await context.SaveChangesAsync();
                 Console.WriteLine("Default data seeded successfully");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error seeding data: {ex.Message}");
+            }
+        }
+
+        private static async Task CreateTestDataForInvoice(QuanNetDbContext context)
+        {
+            try
+            {
+                Console.WriteLine("Creating test data for invoice demo...");
+                
+                // Check if we already have machines in use
+                var machinesInUse = context.MayTrams.Where(m => m.TrangThai == TrangThaiMay.DangSuDung).ToList();
+                
+                if (!machinesInUse.Any())
+                {
+                    // Get some users and machines for test
+                    var testUser = context.NguoiDungs.FirstOrDefault(u => u.Username == "khach001");
+                    var availableMachines = context.MayTrams
+                        .Where(m => m.TrangThai == TrangThaiMay.Trong)
+                        .Take(2)
+                        .ToList();
+                    
+                    if (testUser != null && availableMachines.Any())
+                    {
+                        foreach (var machine in availableMachines)
+                        {
+                            machine.TrangThai = TrangThaiMay.DangSuDung;
+                            machine.UserIDHienTai = testUser.UserID;
+                            machine.ThoiGianBatDau = DateTime.Now.AddHours(-1); // Started 1 hour ago
+                        }
+                        
+                        await context.SaveChangesAsync();
+                        Console.WriteLine($"Set {availableMachines.Count} machines as in-use for testing");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Already have {machinesInUse.Count} machines in use");
+                }
+                
+                // Verify services exist
+                var servicesCount = context.DichVus.Count();
+                Console.WriteLine($"Available services: {servicesCount}");
+                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Warning: Could not create test data: {ex.Message}");
             }
         }
 
@@ -210,7 +303,8 @@ namespace QuanLyQuanNet
                 string connectionString = GetConnectionString();
                 Console.WriteLine($"Using connection string: {connectionString}");
                 
-                services.AddDbContext<QuanNetDbContext>(options =>
+                // Use DbContextFactory instead of direct DbContext registration
+                services.AddDbContextFactory<QuanNetDbContext>(options =>
                 {
                     options.UseSqlServer(connectionString);
                     options.EnableSensitiveDataLogging();

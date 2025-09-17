@@ -4,54 +4,107 @@ namespace QuanLyQuanNet.Data.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        protected readonly QuanNetDbContext _context;
-        protected readonly DbSet<T> _dbSet;
+        protected readonly IDbContextFactory<QuanNetDbContext> _contextFactory;
+        private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
-        public Repository(QuanNetDbContext context)
+        public Repository(IDbContextFactory<QuanNetDbContext> contextFactory)
         {
-            _context = context;
-            _dbSet = context.Set<T>();
+            _contextFactory = contextFactory;
         }
 
         public virtual async Task<IEnumerable<T>> GetAllAsync()
         {
-            return await _dbSet.ToListAsync();
+            await _semaphore.WaitAsync();
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                return await context.Set<T>().ToListAsync();
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
         }
 
         public virtual async Task<T?> GetByIdAsync(int id)
         {
-            return await _dbSet.FindAsync(id);
+            await _semaphore.WaitAsync();
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                return await context.Set<T>().FindAsync(id);
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
         }
 
         public virtual async Task<T> AddAsync(T entity)
         {
-            await _dbSet.AddAsync(entity);
-            await _context.SaveChangesAsync();
-            return entity;
+            await _semaphore.WaitAsync();
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                await context.Set<T>().AddAsync(entity);
+                await context.SaveChangesAsync();
+                return entity;
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
         }
 
         public virtual async Task<T> UpdateAsync(T entity)
         {
-            _dbSet.Update(entity);
-            await _context.SaveChangesAsync();
-            return entity;
+            await _semaphore.WaitAsync();
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                context.Set<T>().Update(entity);
+                await context.SaveChangesAsync();
+                return entity;
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
         }
 
         public virtual async Task<bool> DeleteAsync(int id)
         {
-            var entity = await GetByIdAsync(id);
-            if (entity == null)
-                return false;
+            await _semaphore.WaitAsync();
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var entity = await context.Set<T>().FindAsync(id);
+                if (entity == null)
+                    return false;
 
-            _dbSet.Remove(entity);
-            await _context.SaveChangesAsync();
-            return true;
+                context.Set<T>().Remove(entity);
+                await context.SaveChangesAsync();
+                return true;
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
         }
 
         public virtual async Task<bool> ExistsAsync(int id)
         {
-            var entity = await GetByIdAsync(id);
-            return entity != null;
+            await _semaphore.WaitAsync();
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var entity = await context.Set<T>().FindAsync(id);
+                return entity != null;
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
         }
     }
 }

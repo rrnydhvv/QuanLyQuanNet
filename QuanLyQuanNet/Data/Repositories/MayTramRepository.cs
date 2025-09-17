@@ -5,90 +5,181 @@ namespace QuanLyQuanNet.Data.Repositories
 {
     public class MayTramRepository : Repository<MayTram>, IMayTramRepository
     {
-        public MayTramRepository(QuanNetDbContext context) : base(context)
+        public MayTramRepository(IDbContextFactory<QuanNetDbContext> contextFactory) : base(contextFactory)
         {
         }
 
-        public async Task<IEnumerable<MayTram>> GetAllWithUsersAsync()
+        public async Task<IEnumerable<MayTram>> GetMayTramTheoTrangThaiAsync(TrangThaiMay trangThai)
         {
-            return await _dbSet
-                .Include(m => m.NguoiDungHienTai)
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Set<MayTram>()
+                .Where(m => m.TrangThai == trangThai)
                 .OrderBy(m => m.TenMay)
                 .ToListAsync();
         }
 
-        public async Task<MayTram?> GetByIdWithUserAsync(int mayId)
+        public async Task<IEnumerable<MayTram>> GetMayTramTrongAsync()
         {
-            return await _dbSet
-                .Include(m => m.NguoiDungHienTai)
-                .FirstOrDefaultAsync(m => m.MayID == mayId);
-        }
-
-        public async Task<bool> BatMayAsync(int mayId, int userId)
-        {
-            var mayTram = await GetByIdAsync(mayId);
-            if (mayTram == null || mayTram.TrangThai != TrangThaiMay.Trong)
-                return false;
-
-            mayTram.TrangThai = TrangThaiMay.DangSuDung;
-            mayTram.UserIDHienTai = userId;
-            mayTram.ThoiGianBatDau = DateTime.Now;
-
-            await UpdateAsync(mayTram);
-            return true;
-        }
-
-        public async Task<bool> TatMayAsync(int mayId)
-        {
-            var mayTram = await GetByIdAsync(mayId);
-            if (mayTram == null)
-                return false;
-
-            mayTram.TrangThai = TrangThaiMay.Trong;
-            mayTram.UserIDHienTai = null;
-            mayTram.ThoiGianBatDau = null;
-
-            await UpdateAsync(mayTram);
-            return true;
-        }
-
-        public async Task<IEnumerable<MayTram>> GetMayTrongAsync()
-        {
-            return await _dbSet
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Set<MayTram>()
                 .Where(m => m.TrangThai == TrangThaiMay.Trong)
                 .OrderBy(m => m.TenMay)
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<MayTram>> GetMayDangSuDungAsync()
+        public async Task<bool> BatDauSuDungMayAsync(int mayId, int userId)
         {
-            return await _dbSet
-                .Include(m => m.NguoiDungHienTai)
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var mayTram = await context.Set<MayTram>().FindAsync(mayId);
+                if (mayTram == null || mayTram.TrangThai != TrangThaiMay.Trong)
+                    return false;
+
+                mayTram.TrangThai = TrangThaiMay.DangSuDung;
+                mayTram.UserIDHienTai = userId;
+                mayTram.ThoiGianBatDau = DateTime.Now;
+
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> KetThucSuDungMayAsync(int mayId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var mayTram = await context.Set<MayTram>().FindAsync(mayId);
+                if (mayTram == null || mayTram.TrangThai != TrangThaiMay.DangSuDung)
+                    return false;
+
+                mayTram.TrangThai = TrangThaiMay.Trong;
+                mayTram.UserIDHienTai = null;
+                mayTram.ThoiGianBatDau = null;
+
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<IEnumerable<MayTram>> GetMayTramDangSuDungAsync()
+        {
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Set<MayTram>()
                 .Where(m => m.TrangThai == TrangThaiMay.DangSuDung)
                 .OrderBy(m => m.TenMay)
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<MayTram>> GetMayTramBaoTriAsync()
+        {
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Set<MayTram>()
+                .Where(m => m.TrangThai == TrangThaiMay.BaoTri)
+                .OrderBy(m => m.TenMay)
+                .ToListAsync();
+        }
+
+        public async Task<bool> ChuyenTrangThaiMayAsync(int mayId, TrangThaiMay trangThaiMoi)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var mayTram = await context.Set<MayTram>().FindAsync(mayId);
+                if (mayTram == null)
+                    return false;
+
+                // Reset usage info when changing to available
+                if (trangThaiMoi == TrangThaiMay.Trong)
+                {
+                    mayTram.UserIDHienTai = null;
+                    mayTram.ThoiGianBatDau = null;
+                }
+
+                mayTram.TrangThai = trangThaiMoi;
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<int> GetTongSoMayAsync()
+        {
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Set<MayTram>().CountAsync();
+        }
+
+        public async Task<int> GetSoMayTrongAsync()
+        {
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Set<MayTram>().CountAsync(m => m.TrangThai == TrangThaiMay.Trong);
+        }
+
+        public async Task<int> GetSoMayDangSuDungAsync()
+        {
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Set<MayTram>().CountAsync(m => m.TrangThai == TrangThaiMay.DangSuDung);
+        }
+
+        public async Task<IEnumerable<MayTram>> GetAllWithUserAsync()
+        {
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Set<MayTram>().Include(m => m.NguoiDungHienTai).ToListAsync();
+        }
+
+        public async Task<MayTram?> GetByIdWithUserAsync(int id)
+        {
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Set<MayTram>().Include(m => m.NguoiDungHienTai).FirstOrDefaultAsync(m => m.MayID == id);
+        }
+
+        // Additional interface methods
+        public async Task<IEnumerable<MayTram>> GetAllWithUsersAsync()
+        {
+            return await GetAllWithUserAsync();
+        }
+
+        public async Task<bool> BatMayAsync(int mayId, int userId)
+        {
+            return await BatDauSuDungMayAsync(mayId, userId);
+        }
+
+        public async Task<bool> TatMayAsync(int mayId)
+        {
+            return await KetThucSuDungMayAsync(mayId);
+        }
+
+        public async Task<IEnumerable<MayTram>> GetMayTrongAsync()
+        {
+            return await GetMayTramTrongAsync();
+        }
+
+        public async Task<IEnumerable<MayTram>> GetMayDangSuDungAsync()
+        {
+            return await GetMayTramDangSuDungAsync();
+        }
+
         public async Task<bool> UpdateTrangThaiAsync(int mayId, TrangThaiMay trangThai)
         {
-            var mayTram = await GetByIdAsync(mayId);
-            if (mayTram == null)
-                return false;
-
-            mayTram.TrangThai = trangThai;
-            if (trangThai == TrangThaiMay.Trong)
-            {
-                mayTram.UserIDHienTai = null;
-                mayTram.ThoiGianBatDau = null;
-            }
-
-            await UpdateAsync(mayTram);
-            return true;
+            return await ChuyenTrangThaiMayAsync(mayId, trangThai);
         }
 
         public async Task<TimeSpan> GetThoiGianSuDungAsync(int mayId)
         {
-            var mayTram = await GetByIdAsync(mayId);
+            using var context = await _contextFactory.CreateDbContextAsync();
+            var mayTram = await context.Set<MayTram>().FindAsync(mayId);
             if (mayTram?.ThoiGianBatDau == null)
                 return TimeSpan.Zero;
 
@@ -97,27 +188,13 @@ namespace QuanLyQuanNet.Data.Repositories
 
         public async Task<decimal> TinhTienHienTaiAsync(int mayId)
         {
-            var mayTram = await GetByIdAsync(mayId);
-            if (mayTram?.ThoiGianBatDau == null)
-                return 0;
+            var thoiGian = await GetThoiGianSuDungAsync(mayId);
+            if (thoiGian == TimeSpan.Zero) return 0;
 
-            var thoiGianSuDung = DateTime.Now - mayTram.ThoiGianBatDau.Value;
-            var soGio = (decimal)thoiGianSuDung.TotalHours;
-            
-            // Làm tròn lên 15 phút (0.25 giờ)
-            soGio = Math.Ceiling(soGio * 4) / 4;
-            
-            return soGio * mayTram.GiaTheoGio;
-        }
-
-        public override async Task<IEnumerable<MayTram>> GetAllAsync()
-        {
-            return await _dbSet.Include(m => m.NguoiDungHienTai).ToListAsync();
-        }
-
-        public override async Task<MayTram?> GetByIdAsync(int id)
-        {
-            return await _dbSet.Include(m => m.NguoiDungHienTai).FirstOrDefaultAsync(m => m.MayID == id);
+            // Giả sử 10,000 VNĐ/giờ
+            const decimal giaTheoGio = 10000m;
+            var soGio = (decimal)thoiGian.TotalHours;
+            return Math.Round(soGio * giaTheoGio, 0);
         }
     }
 }

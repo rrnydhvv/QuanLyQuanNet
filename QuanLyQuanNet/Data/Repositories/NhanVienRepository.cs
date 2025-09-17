@@ -5,33 +5,62 @@ namespace QuanLyQuanNet.Data.Repositories
 {
     public class NhanVienRepository : Repository<NhanVien>, INhanVienRepository
     {
-        public NhanVienRepository(QuanNetDbContext context) : base(context)
+        public NhanVienRepository(IDbContextFactory<QuanNetDbContext> contextFactory) : base(contextFactory)
         {
         }
 
         public async Task<NhanVien?> GetByUsernameAsync(string username)
         {
-            return await _dbSet.FirstOrDefaultAsync(n => n.Username == username);
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Set<NhanVien>().FirstOrDefaultAsync(n => n.Username == username);
+        }
+
+        public async Task<bool> UsernameExistsAsync(string username)
+        {
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Set<NhanVien>().AnyAsync(n => n.Username == username);
         }
 
         public async Task<bool> IsUsernameExistsAsync(string username)
         {
-            return await _dbSet.AnyAsync(n => n.Username == username);
+            return await UsernameExistsAsync(username);
         }
 
         public async Task<NhanVien?> AuthenticateAsync(string username, string password)
         {
-            var nhanVien = await GetByUsernameAsync(username);
-            if (nhanVien == null || !nhanVien.TrangThai)
-                return null;
-
-            bool isValidPassword = BCrypt.Net.BCrypt.Verify(password, nhanVien.PasswordHash);
-            return isValidPassword ? nhanVien : null;
+            using var context = await _contextFactory.CreateDbContextAsync();
+            var nhanVien = await context.Set<NhanVien>().FirstOrDefaultAsync(n => n.Username == username);
+            
+            if (nhanVien != null && BCrypt.Net.BCrypt.Verify(password, nhanVien.PasswordHash))
+            {
+                return nhanVien;
+            }
+            
+            return null;
         }
 
-        public override async Task<IEnumerable<NhanVien>> GetAllAsync()
+        public async Task<bool> UpdateTrangThaiAsync(int nhanVienId, bool trangThai)
         {
-            return await _dbSet.Where(n => n.TrangThai).ToListAsync();
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var nhanVien = await context.Set<NhanVien>().FindAsync(nhanVienId);
+                if (nhanVien == null) return false;
+
+                nhanVien.TrangThai = trangThai;
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<IEnumerable<NhanVien>> GetNhanVienHoatDongAsync()
+        {
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Set<NhanVien>().Where(n => n.TrangThai).ToListAsync();
         }
     }
 }

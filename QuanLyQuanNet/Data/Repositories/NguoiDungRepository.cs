@@ -5,39 +5,55 @@ namespace QuanLyQuanNet.Data.Repositories
 {
     public class NguoiDungRepository : Repository<NguoiDung>, INguoiDungRepository
     {
-        public NguoiDungRepository(QuanNetDbContext context) : base(context)
+        public NguoiDungRepository(IDbContextFactory<QuanNetDbContext> contextFactory) : base(contextFactory)
         {
         }
 
         public async Task<NguoiDung?> GetByUsernameAsync(string username)
         {
-            return await _dbSet.FirstOrDefaultAsync(u => u.Username == username);
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Set<NguoiDung>().FirstOrDefaultAsync(u => u.Username == username);
+        }
+
+        public async Task<bool> UsernameExistsAsync(string username)
+        {
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Set<NguoiDung>().AnyAsync(u => u.Username == username);
         }
 
         public async Task<bool> IsUsernameExistsAsync(string username)
         {
-            return await _dbSet.AnyAsync(u => u.Username == username);
+            return await UsernameExistsAsync(username);
         }
 
-        public async Task<bool> UpdateSoDuAsync(int userId, decimal soTien)
+        public async Task<bool> UpdateSoDuAsync(int userId, decimal soDuMoi)
         {
-            var user = await GetByIdAsync(userId);
-            if (user == null)
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var nguoiDung = await context.Set<NguoiDung>().FindAsync(userId);
+                if (nguoiDung == null) return false;
+
+                nguoiDung.SoDu = soDuMoi;
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
                 return false;
-
-            user.SoDu += soTien;
-            await UpdateAsync(user);
-            return true;
+            }
         }
 
-        public override async Task<IEnumerable<NguoiDung>> GetAllAsync()
+        public async Task<IEnumerable<NguoiDung>> GetAllWithHoaDonsAsync()
         {
-            return await _dbSet.Include(u => u.HoaDons).ToListAsync();
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Set<NguoiDung>().Include(u => u.HoaDons).ToListAsync();
         }
 
-        public override async Task<NguoiDung?> GetByIdAsync(int id)
+        public async Task<NguoiDung?> GetByIdWithHoaDonsAsync(int id)
         {
-            return await _dbSet.Include(u => u.HoaDons).FirstOrDefaultAsync(u => u.UserID == id);
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Set<NguoiDung>().Include(u => u.HoaDons).FirstOrDefaultAsync(u => u.UserID == id);
         }
     }
 }

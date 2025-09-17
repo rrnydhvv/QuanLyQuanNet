@@ -33,6 +33,17 @@ namespace QuanLyQuanNet.Models
 
         public bool DaThanhToan { get; set; } = false;
 
+        public DateTime? NgayThanhToan { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal TienKhachDua { get; set; } = 0;
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal TienThua { get; set; } = 0;
+
+        [StringLength(50)]
+        public string PhuongThucThanhToan { get; set; } = "Tiền mặt";
+
         public int? NhanVienID { get; set; }
 
         [StringLength(500)]
