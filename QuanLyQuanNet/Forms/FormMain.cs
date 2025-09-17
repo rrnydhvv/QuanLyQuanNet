@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using QuanLyQuanNet.Models;
 using QuanLyQuanNet.Services;
 
@@ -95,7 +96,7 @@ namespace QuanLyQuanNet.Forms
         {
             try
             {
-                var form = new FormQuanLyMayTram(_authService);
+                var form = new FormQuanLyMayTram();
                 form.ShowDialog();
             }
             catch (Exception ex)
@@ -119,7 +120,7 @@ namespace QuanLyQuanNet.Forms
         {
             try
             {
-                var form = new FormQuanLyKhachHang(_authService);
+                var form = new FormQuanLyKhachHang();
                 form.ShowDialog();
             }
             catch (Exception ex)
@@ -133,7 +134,8 @@ namespace QuanLyQuanNet.Forms
         {
             try
             {
-                var form = new FormQuanLyDichVu(_authService);
+                var dichVuService = Program.ServiceProvider?.GetRequiredService<IDichVuService>();
+                var form = new FormQuanLyDichVu(dichVuService!);
                 form.ShowDialog();
             }
             catch (Exception ex)

@@ -3,6 +3,7 @@ using QuanLyQuanNet.Data.Repositories;
 using QuanLyQuanNet.Services;
 using QuanLyQuanNet.Utils;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace QuanLyQuanNet.Forms
 {
@@ -18,13 +19,10 @@ namespace QuanLyQuanNet.Forms
                 InitializeComponent();
                 Console.WriteLine("InitializeComponent completed");
                 
-                // Initialize services
-                Console.WriteLine("Creating DbContext...");
-                var dbContext = new QuanNetDbContext();
-                Console.WriteLine("Creating NhanVienRepository...");
-                var nhanVienRepository = new NhanVienRepository(dbContext);
-                Console.WriteLine("Creating AuthenticationService...");
-                _authService = new AuthenticationService(nhanVienRepository);
+                // Get services from DI container
+                Console.WriteLine("Getting services from DI container...");
+                _authService = Program.ServiceProvider?.GetRequiredService<IAuthenticationService>()
+                    ?? throw new InvalidOperationException("AuthenticationService not found in DI container");
                 Console.WriteLine("Services initialized successfully");
 
                 // Set default values for testing
@@ -42,34 +40,6 @@ namespace QuanLyQuanNet.Forms
                 Console.WriteLine($"Error in FormLogin constructor: {ex.Message}");
                 Console.WriteLine($"Stack trace: {ex.StackTrace}");
                 throw;
-            }
-        }
-
-        private async Task InitializeDatabaseAsync()
-        {
-            try
-            {
-                using var context = new QuanNetDbContext();
-                await context.Database.EnsureCreatedAsync();
-                
-                // Check if admin user exists with proper password hash
-                var admin = await context.NhanViens.FirstOrDefaultAsync(n => n.Username == "admin");
-                if (admin != null)
-                {
-                    // Test if current hash works
-                    bool hashWorks = PasswordHelper.VerifyPassword("admin123", admin.PasswordHash);
-                    if (!hashWorks)
-                    {
-                        // Update with correct hash
-                        admin.PasswordHash = PasswordHelper.HashPassword("admin123");
-                        await context.SaveChangesAsync();
-                        Console.WriteLine("Updated admin password hash");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Database initialization error: {ex.Message}");
             }
         }
 
@@ -103,13 +73,6 @@ namespace QuanLyQuanNet.Forms
                 btnLogin.Enabled = false;
                 btnLogin.Text = "Đang xử lý...";
                 lblMessage.Text = "";
-
-                // Test database connection first
-                using var testContext = new QuanNetDbContext();
-                await testContext.Database.EnsureCreatedAsync();
-
-                // Initialize database if needed
-                await InitializeDatabaseAsync();
 
                 var user = await _authService.LoginAsync(txtUsername.Text.Trim(), txtPassword.Text);
 
