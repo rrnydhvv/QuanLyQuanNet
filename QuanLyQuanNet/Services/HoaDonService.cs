@@ -318,5 +318,21 @@ namespace QuanLyQuanNet.Services
             return await _context.HoaDons
                 .CountAsync(h => h.NgayTao >= startDate && h.NgayTao < endDate);
         }
+
+        public async Task<IEnumerable<HoaDon>> GetHoaDonByDateRangeAsync(DateTime tuNgay, DateTime denNgay)
+        {
+            var startDate = tuNgay.Date;
+            var endDate = denNgay.Date.AddDays(1);
+
+            return await _context.HoaDons
+                .Include(h => h.NguoiDung)
+                .Include(h => h.MayTram)
+                .Include(h => h.NhanVien)
+                .Include(h => h.ChiTietHoaDons)
+                .ThenInclude(ct => ct.DichVu)
+                .Where(h => h.NgayTao >= startDate && h.NgayTao < endDate)
+                .OrderByDescending(h => h.NgayTao)
+                .ToListAsync();
+        }
     }
 }

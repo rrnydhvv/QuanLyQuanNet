@@ -40,6 +40,7 @@ namespace QuanLyQuanNet.Forms
             this.nhânViênToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hóaĐơnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tạoHóaĐơnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tạoHóaĐơnThủCôngToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.danhSáchHóaĐơnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.báoCáoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.thốngKêDaoanhThuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,6 +54,7 @@ namespace QuanLyQuanNet.Forms
             this.btnQuanLyMay = new System.Windows.Forms.Button();
             this.btnQuanLyKhach = new System.Windows.Forms.Button();
             this.btnTaoHoaDon = new System.Windows.Forms.Button();
+            this.btnTaoHoaDonThuCong = new System.Windows.Forms.Button();
             this.btnThongKe = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -139,6 +141,7 @@ namespace QuanLyQuanNet.Forms
             // 
             this.hóaĐơnToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tạoHóaĐơnToolStripMenuItem,
+            this.tạoHóaĐơnThủCôngToolStripMenuItem,
             this.danhSáchHóaĐơnToolStripMenuItem});
             this.hóaĐơnToolStripMenuItem.Name = "hóaĐơnToolStripMenuItem";
             this.hóaĐơnToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
@@ -147,14 +150,21 @@ namespace QuanLyQuanNet.Forms
             // tạoHóaĐơnToolStripMenuItem
             // 
             this.tạoHóaĐơnToolStripMenuItem.Name = "tạoHóaĐơnToolStripMenuItem";
-            this.tạoHóaĐơnToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.tạoHóaĐơnToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.tạoHóaĐơnToolStripMenuItem.Text = "Tạo hóa đơn";
             this.tạoHóaĐơnToolStripMenuItem.Click += new System.EventHandler(this.tạoHóaĐơnToolStripMenuItem_Click);
+            // 
+            // tạoHóaĐơnThủCôngToolStripMenuItem
+            // 
+            this.tạoHóaĐơnThủCôngToolStripMenuItem.Name = "tạoHóaĐơnThủCôngToolStripMenuItem";
+            this.tạoHóaĐơnThủCôngToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.tạoHóaĐơnThủCôngToolStripMenuItem.Text = "Tạo hóa đơn thủ công";
+            this.tạoHóaĐơnThủCôngToolStripMenuItem.Click += new System.EventHandler(this.tạoHóaĐơnThủCôngToolStripMenuItem_Click);
             // 
             // danhSáchHóaĐơnToolStripMenuItem
             // 
             this.danhSáchHóaĐơnToolStripMenuItem.Name = "danhSáchHóaĐơnToolStripMenuItem";
-            this.danhSáchHóaĐơnToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.danhSáchHóaĐơnToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.danhSáchHóaĐơnToolStripMenuItem.Text = "Danh sách hóa đơn";
             // 
             // báoCáoToolStripMenuItem
@@ -229,13 +239,14 @@ namespace QuanLyQuanNet.Forms
             // groupBoxQuickActions
             // 
             this.groupBoxQuickActions.Controls.Add(this.btnThongKe);
+            this.groupBoxQuickActions.Controls.Add(this.btnTaoHoaDonThuCong);
             this.groupBoxQuickActions.Controls.Add(this.btnTaoHoaDon);
             this.groupBoxQuickActions.Controls.Add(this.btnQuanLyKhach);
             this.groupBoxQuickActions.Controls.Add(this.btnQuanLyMay);
             this.groupBoxQuickActions.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.groupBoxQuickActions.Location = new System.Drawing.Point(50, 120);
             this.groupBoxQuickActions.Name = "groupBoxQuickActions";
-            this.groupBoxQuickActions.Size = new System.Drawing.Size(1100, 200);
+            this.groupBoxQuickActions.Size = new System.Drawing.Size(1100, 260);
             this.groupBoxQuickActions.TabIndex = 1;
             this.groupBoxQuickActions.TabStop = false;
             this.groupBoxQuickActions.Text = "Chức năng nhanh";
@@ -275,6 +286,18 @@ namespace QuanLyQuanNet.Forms
             this.btnTaoHoaDon.Text = "Tạo\r\nHóa đơn";
             this.btnTaoHoaDon.UseVisualStyleBackColor = false;
             this.btnTaoHoaDon.Click += new System.EventHandler(this.btnTaoHoaDon_Click);
+            // 
+            // btnTaoHoaDonThuCong
+            // 
+            this.btnTaoHoaDonThuCong.BackColor = System.Drawing.Color.DarkOrange;
+            this.btnTaoHoaDonThuCong.ForeColor = System.Drawing.Color.White;
+            this.btnTaoHoaDonThuCong.Location = new System.Drawing.Point(50, 170);
+            this.btnTaoHoaDonThuCong.Name = "btnTaoHoaDonThuCong";
+            this.btnTaoHoaDonThuCong.Size = new System.Drawing.Size(200, 100);
+            this.btnTaoHoaDonThuCong.TabIndex = 4;
+            this.btnTaoHoaDonThuCong.Text = "Tạo hóa đơn\r\nthủ công (Admin)";
+            this.btnTaoHoaDonThuCong.UseVisualStyleBackColor = false;
+            this.btnTaoHoaDonThuCong.Click += new System.EventHandler(this.btnTaoHoaDonThuCong_Click);
             // 
             // btnThongKe
             // 
@@ -325,6 +348,7 @@ namespace QuanLyQuanNet.Forms
         private System.Windows.Forms.ToolStripMenuItem nhânViênToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hóaĐơnToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tạoHóaĐơnToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tạoHóaĐơnThủCôngToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem danhSáchHóaĐơnToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem báoCáoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem thốngKêDaoanhThuToolStripMenuItem;
@@ -338,6 +362,7 @@ namespace QuanLyQuanNet.Forms
         private System.Windows.Forms.Button btnQuanLyMay;
         private System.Windows.Forms.Button btnQuanLyKhach;
         private System.Windows.Forms.Button btnTaoHoaDon;
+        private System.Windows.Forms.Button btnTaoHoaDonThuCong;
         private System.Windows.Forms.Button btnThongKe;
     }
 }

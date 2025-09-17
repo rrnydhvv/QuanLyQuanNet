@@ -12,10 +12,10 @@ namespace QuanLyQuanNet.Forms
 
         // UI Controls
         private DateTimePicker dtpTuNgay = null!, dtpDenNgay = null!;
-        private Button btnXemThongKe = null!, btnXuatBaoCao = null!;
+        private Button btnXemThongKe = null!;
         private DataGridView dgvBaoCao = null!;
         private Label lblTongDoanhThu = null!, lblSoHoaDon = null!, lblTrungBinhHoaDon = null!;
-        private Label lblMayHoatDong = null!, lblTyLeSuDung = null!, lblDichVuBanChay = null!;
+        private Label lblMayHoatDong = null!;
         private TabControl tabControl = null!;
 
         public FormThongKe(IAuthenticationService authService, IHoaDonService hoaDonService, 

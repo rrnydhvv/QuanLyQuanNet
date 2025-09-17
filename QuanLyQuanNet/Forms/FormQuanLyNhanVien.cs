@@ -24,7 +24,7 @@ namespace QuanLyQuanNet.Forms
             InitializeComponent();
             _authService = authService;
             _nhanVienRepository = nhanVienRepository;
-            Load += FormQuanLyNhanVien_Load;
+            Load += FormQuanLyNhanVien_Load!;
         }
 
         private void InitializeComponent()
@@ -196,8 +196,9 @@ namespace QuanLyQuanNet.Forms
 
                 dgvNhanVien.DataSource = displayData;
                 
-                if (dgvNhanVien.Columns["ID"] != null)
-                    dgvNhanVien.Columns["ID"].Visible = false;
+                var colID = dgvNhanVien.Columns["ID"];
+                if (colID != null)
+                    colID.Visible = false;
             }
             catch (Exception ex)
             {
@@ -211,8 +212,11 @@ namespace QuanLyQuanNet.Forms
             if (dgvNhanVien.SelectedRows.Count > 0)
             {
                 var row = dgvNhanVien.SelectedRows[0];
-                var id = (int)row.Cells["ID"].Value;
-                LoadEmployeeToForm(id);
+                var idCell = row.Cells["ID"];
+                if (idCell?.Value is int id)
+                {
+                    LoadEmployeeToForm(id);
+                }
             }
         }
 

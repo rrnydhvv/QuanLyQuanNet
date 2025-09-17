@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("QuanLyQuanNet")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4593628766a2db9511e95d7f1d355833be3bf3fd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+76a3a32d374b8d71b564cc921579d13b44131425")]
 [assembly: System.Reflection.AssemblyProductAttribute("QuanLyQuanNet")]
 [assembly: System.Reflection.AssemblyTitleAttribute("QuanLyQuanNet")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

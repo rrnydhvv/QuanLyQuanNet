@@ -55,6 +55,13 @@ namespace QuanLyQuanNet.Forms
                 // btnQuanLyNhanVien.Visible = false;
             }
 
+            // Chỉ Admin mới thấy tạo hóa đơn thủ công
+            if (user.ChucVu != ChucVu.QuanTriVien)
+            {
+                tạoHóaĐơnThủCôngToolStripMenuItem.Visible = false;
+                btnTaoHoaDonThuCong.Visible = false;
+            }
+
             // Quản trị viên có đầy đủ quyền
         }
 
@@ -221,6 +228,11 @@ namespace QuanLyQuanNet.Forms
             thốngKêToolStripMenuItem_Click(sender, e);
         }
 
+        private void btnTaoHoaDonThuCong_Click(object sender, EventArgs e)
+        {
+            OpenFormTaoHoaDonThuCong();
+        }
+
         private void tạoHóaĐơnToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFormTaoHoaDon();
@@ -253,6 +265,29 @@ namespace QuanLyQuanNet.Forms
             // TODO: Implement FormThongKe
             MessageBox.Show("Chức năng thống kê doanh thu đang được phát triển!", "Thông báo", 
                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void tạoHóaĐơnThủCôngToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFormTaoHoaDonThuCong();
+        }
+
+        private void OpenFormTaoHoaDonThuCong()
+        {
+            try
+            {
+                var hoaDonService = _serviceProvider.GetRequiredService<IHoaDonService>();
+                var dichVuService = _serviceProvider.GetRequiredService<IDichVuService>();
+                var quanLyMayService = _serviceProvider.GetRequiredService<IQuanLyMayService>();
+                
+                var form = new FormTaoHoaDonThuCong(_authService, hoaDonService, dichVuService, quanLyMayService);
+                form.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi mở form tạo hóa đơn thủ công: {ex.Message}", "Lỗi", 
+                               MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

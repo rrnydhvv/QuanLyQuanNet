@@ -183,33 +183,47 @@ namespace QuanLyQuanNet.Forms
 
         private async Task LoadMayTramDangSuDung()
         {
-            var mayTramList = await _quanLyMayService.GetAllMayTramAsync();
-            var mayDangSuDung = mayTramList.Where(m => m.TrangThai == TrangThaiMay.DangSuDung).ToList();
-            
-            // Debug output
-            MessageBox.Show($"Tổng số máy: {mayTramList.Count()}\nMáy đang sử dụng: {mayDangSuDung.Count}", 
-                           "Debug Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            
-            dgvMayTram.DataSource = mayDangSuDung;
+            try
+            {
+                var mayTramList = await _quanLyMayService.GetAllMayTramAsync();
+                var mayDangSuDung = mayTramList.Where(m => m.TrangThai == TrangThaiMay.DangSuDung).ToList();
+                
+                dgvMayTram.DataSource = mayDangSuDung;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tải danh sách máy: {ex.Message}", "Lỗi", 
+                               MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private async Task LoadDichVu()
         {
-            var dichVuList = await _dichVuService.GetAllDichVuAsync();
-            
-            // Debug output
-            MessageBox.Show($"Số dịch vụ có sẵn: {dichVuList.Count()}", 
-                           "Debug Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            
-            dgvDichVu.DataSource = dichVuList;
+            try
+            {
+                var dichVuList = await _dichVuService.GetAllDichVuAsync();
+                dgvDichVu.DataSource = dichVuList;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tải danh sách dịch vụ: {ex.Message}", "Lỗi", 
+                               MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        private Task LoadDanhSachHoaDon()
+        private async Task LoadDanhSachHoaDon()
         {
-            // TODO: Implement GetHoaDonByDateRangeAsync in service
-            var emptyList = new List<HoaDon>();
-            dgvDanhSachHoaDon.DataSource = emptyList;
-            return Task.CompletedTask;
+            try
+            {
+                var hoaDons = await _hoaDonService.GetHoaDonByDateRangeAsync(dtpTuNgay.Value, dtpDenNgay.Value);
+                dgvDanhSachHoaDon.DataSource = hoaDons.ToList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tải danh sách hóa đơn: {ex.Message}", "Lỗi", 
+                               MessageBoxButtons.OK, MessageBoxIcon.Error);
+                dgvDanhSachHoaDon.DataSource = new List<HoaDon>();
+            }
         }
 
         private async void dgvMayTram_SelectionChanged(object sender, EventArgs e)
@@ -350,26 +364,22 @@ namespace QuanLyQuanNet.Forms
             
             try
             {
-                // TODO: Tạo FormThanhToan
-                /*
-                // Hiển thị form thanh toán
-                using (var formThanhToan = new FormThanhToan(_selectedMayTram, _chiTietHoaDon, _hoaDonService))
+                // Tạo form thanh toán
+                var formThanhToan = new FormThanhToan(_selectedMayTram, _chiTietHoaDon, _hoaDonService, _authService);
+                if (formThanhToan.ShowDialog() == DialogResult.OK)
                 {
-                    if (formThanhToan.ShowDialog() == DialogResult.OK)
+                    // Thanh toán thành công
+                    MessageBox.Show("Thanh toán thành công!", "Thông báo", 
+                                   MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    
+                    // Reset form và reload data
+                    ResetForm();
+                    Task.Run(async () =>
                     {
-                        // Thanh toán thành công
-                        MessageBox.Show("Thanh toán thành công!", "Thông báo", 
-                                       MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        
-                        // Reset form
-                        ResetForm();
                         await LoadMayTramDangSuDung();
                         await LoadDanhSachHoaDon();
-                    }
+                    });
                 }
-                */
-                MessageBox.Show("Chức năng thanh toán đang được phát triển!", "Thông báo", 
-                               MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {

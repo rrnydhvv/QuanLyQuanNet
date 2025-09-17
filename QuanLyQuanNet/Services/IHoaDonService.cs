@@ -24,6 +24,7 @@ namespace QuanLyQuanNet.Services
         Task<IEnumerable<HoaDon>> GetHoaDonChuaThanhToanAsync();
         Task<IEnumerable<HoaDon>> GetHoaDonTheoNgayAsync(DateTime ngay);
         Task<IEnumerable<HoaDon>> GetHoaDonTheoKhachHangAsync(int userId);
+        Task<IEnumerable<HoaDon>> GetHoaDonByDateRangeAsync(DateTime tuNgay, DateTime denNgay);
         Task<HoaDon?> GetHoaDonByIdAsync(int hoaDonId);
         Task<HoaDon?> GetHoaDonDangMoTheoMayAsync(int mayId);
         
