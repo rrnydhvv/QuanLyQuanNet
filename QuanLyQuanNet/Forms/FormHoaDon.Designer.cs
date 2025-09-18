@@ -96,39 +96,41 @@ namespace QuanLyQuanNet.Forms
             this.SuspendLayout();
 
             // panel1
-            this.panel1.BackColor = Color.FromArgb(41, 128, 185);
+            this.panel1.BackColor = Color.FromArgb(64, 123, 255);
             this.panel1.Controls.Add(this.lblTitle);
             this.panel1.Dock = DockStyle.Top;
             this.panel1.Location = new Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new Size(1400, 60);
+            this.panel1.Size = new Size(1400, 50);
             this.panel1.TabIndex = 0;
 
             // lblTitle
+            this.lblTitle.Anchor = AnchorStyles.None;
             this.lblTitle.AutoSize = true;
-            this.lblTitle.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Bold);
+            this.lblTitle.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Bold, GraphicsUnit.Point);
             this.lblTitle.ForeColor = Color.White;
-            this.lblTitle.Location = new Point(20, 18);
+            this.lblTitle.Location = new Point(600, 12);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new Size(188, 26);
+            this.lblTitle.Size = new Size(200, 26);
             this.lblTitle.TabIndex = 0;
-            this.lblTitle.Text = "QUẢN LÝ HÓA ĐƠN";
+            this.lblTitle.Text = "Quản lý hóa đơn";
 
             // tabControl
+            this.tabControl.Controls.Add(this.tabHoaDonMoi);
+            this.tabControl.Controls.Add(this.tabQuanLyHoaDon);
             this.tabControl.Dock = DockStyle.Fill;
-            this.tabControl.Font = new Font("Microsoft Sans Serif", 10F);
-            this.tabControl.Location = new Point(0, 60);
+            this.tabControl.Location = new Point(0, 50);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new Size(1400, 690);
+            this.tabControl.Size = new Size(1400, 700);
             this.tabControl.TabIndex = 1;
 
             // tabHoaDonMoi
             this.tabHoaDonMoi.Controls.Add(this.splitContainer1);
-            this.tabHoaDonMoi.Location = new Point(4, 25);
+            this.tabHoaDonMoi.Location = new Point(4, 26);
             this.tabHoaDonMoi.Name = "tabHoaDonMoi";
             this.tabHoaDonMoi.Padding = new Padding(3);
-            this.tabHoaDonMoi.Size = new Size(1392, 661);
+            this.tabHoaDonMoi.Size = new Size(1392, 670);
             this.tabHoaDonMoi.TabIndex = 0;
             this.tabHoaDonMoi.Text = "Tạo hóa đơn mới";
             this.tabHoaDonMoi.UseVisualStyleBackColor = true;
@@ -144,8 +146,8 @@ namespace QuanLyQuanNet.Forms
             this.splitContainer1.Panel1.Controls.Add(this.groupThongTinKhach);
 
             // splitContainer1.Panel2
-            this.splitContainer1.Panel1.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new Size(1386, 655);
+            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
+            this.splitContainer1.Size = new Size(1386, 664);
             this.splitContainer1.SplitterDistance = 200;
             this.splitContainer1.TabIndex = 0;
 
@@ -182,63 +184,58 @@ namespace QuanLyQuanNet.Forms
             this.groupThongTinKhach.Controls.Add(this.lblThoiGianSuDung);
             this.groupThongTinKhach.Controls.Add(this.txtTienMay);
             this.groupThongTinKhach.Controls.Add(this.lblTienMay);
-            this.groupThongTinKhach.Dock = DockStyle.Right;
-            this.groupThongTinKhach.Location = new Point(510, 0);
+            this.groupThongTinKhach.Dock = DockStyle.Fill;
+            this.groupThongTinKhach.Location = new Point(500, 0);
             this.groupThongTinKhach.Name = "groupThongTinKhach";
-            this.groupThongTinKhach.Size = new Size(876, 200);
+            this.groupThongTinKhach.Size = new Size(886, 200);
             this.groupThongTinKhach.TabIndex = 1;
             this.groupThongTinKhach.TabStop = false;
             this.groupThongTinKhach.Text = "Thông tin khách hàng";
 
+            // txtKhachHang
+            this.txtKhachHang.Location = new Point(100, 30);
+            this.txtKhachHang.Name = "txtKhachHang";
+            this.txtKhachHang.ReadOnly = true;
+            this.txtKhachHang.Size = new Size(200, 23);
+            this.txtKhachHang.TabIndex = 1;
+
             // lblKhachHang
             this.lblKhachHang.AutoSize = true;
-            this.lblKhachHang.Location = new Point(20, 30);
+            this.lblKhachHang.Location = new Point(10, 33);
             this.lblKhachHang.Name = "lblKhachHang";
             this.lblKhachHang.Size = new Size(84, 17);
             this.lblKhachHang.TabIndex = 0;
             this.lblKhachHang.Text = "Khách hàng:";
 
-            // txtKhachHang
-            this.txtKhachHang.Font = new Font("Microsoft Sans Serif", 11F, FontStyle.Bold);
-            this.txtKhachHang.Location = new Point(120, 27);
-            this.txtKhachHang.Name = "txtKhachHang";
-            this.txtKhachHang.ReadOnly = true;
-            this.txtKhachHang.Size = new Size(300, 24);
-            this.txtKhachHang.TabIndex = 1;
+            // txtThoiGianSuDung
+            this.txtThoiGianSuDung.Location = new Point(100, 70);
+            this.txtThoiGianSuDung.Name = "txtThoiGianSuDung";
+            this.txtThoiGianSuDung.ReadOnly = true;
+            this.txtThoiGianSuDung.Size = new Size(150, 23);
+            this.txtThoiGianSuDung.TabIndex = 3;
 
             // lblThoiGianSuDung
             this.lblThoiGianSuDung.AutoSize = true;
-            this.lblThoiGianSuDung.Location = new Point(20, 70);
+            this.lblThoiGianSuDung.Location = new Point(10, 73);
             this.lblThoiGianSuDung.Name = "lblThoiGianSuDung";
-            this.lblThoiGianSuDung.Size = new Size(118, 17);
+            this.lblThoiGianSuDung.Size = new Size(81, 17);
             this.lblThoiGianSuDung.TabIndex = 2;
-            this.lblThoiGianSuDung.Text = "Thời gian sử dụng:";
+            this.lblThoiGianSuDung.Text = "Thời gian SD:";
 
-            // txtThoiGianSuDung
-            this.txtThoiGianSuDung.Font = new Font("Microsoft Sans Serif", 11F, FontStyle.Bold);
-            this.txtThoiGianSuDung.ForeColor = Color.Blue;
-            this.txtThoiGianSuDung.Location = new Point(150, 67);
-            this.txtThoiGianSuDung.Name = "txtThoiGianSuDung";
-            this.txtThoiGianSuDung.ReadOnly = true;
-            this.txtThoiGianSuDung.Size = new Size(150, 24);
-            this.txtThoiGianSuDung.TabIndex = 3;
+            // txtTienMay
+            this.txtTienMay.Location = new Point(100, 110);
+            this.txtTienMay.Name = "txtTienMay";
+            this.txtTienMay.ReadOnly = true;
+            this.txtTienMay.Size = new Size(150, 23);
+            this.txtTienMay.TabIndex = 5;
 
             // lblTienMay
             this.lblTienMay.AutoSize = true;
-            this.lblTienMay.Location = new Point(20, 110);
+            this.lblTienMay.Location = new Point(10, 113);
             this.lblTienMay.Name = "lblTienMay";
-            this.lblTienMay.Size = new Size(69, 17);
+            this.lblTienMay.Size = new Size(64, 17);
             this.lblTienMay.TabIndex = 4;
             this.lblTienMay.Text = "Tiền máy:";
-
-            // txtTienMay
-            this.txtTienMay.Font = new Font("Microsoft Sans Serif", 11F, FontStyle.Bold);
-            this.txtTienMay.ForeColor = Color.Green;
-            this.txtTienMay.Location = new Point(120, 107);
-            this.txtTienMay.Name = "txtTienMay";
-            this.txtTienMay.ReadOnly = true;
-            this.txtTienMay.Size = new Size(150, 24);
-            this.txtTienMay.TabIndex = 5;
 
             // splitContainer2
             this.splitContainer2.Dock = DockStyle.Fill;
@@ -250,7 +247,7 @@ namespace QuanLyQuanNet.Forms
 
             // splitContainer2.Panel2
             this.splitContainer2.Panel2.Controls.Add(this.groupHoaDon);
-            this.splitContainer2.Size = new Size(1386, 451);
+            this.splitContainer2.Size = new Size(1386, 460);
             this.splitContainer2.SplitterDistance = 600;
             this.splitContainer2.TabIndex = 0;
 
@@ -261,7 +258,7 @@ namespace QuanLyQuanNet.Forms
             this.groupDichVu.Dock = DockStyle.Fill;
             this.groupDichVu.Location = new Point(0, 0);
             this.groupDichVu.Name = "groupDichVu";
-            this.groupDichVu.Size = new Size(600, 451);
+            this.groupDichVu.Size = new Size(600, 460);
             this.groupDichVu.TabIndex = 0;
             this.groupDichVu.TabStop = false;
             this.groupDichVu.Text = "Danh sách dịch vụ";
@@ -302,7 +299,7 @@ namespace QuanLyQuanNet.Forms
             this.groupHoaDon.Dock = DockStyle.Fill;
             this.groupHoaDon.Location = new Point(0, 0);
             this.groupHoaDon.Name = "groupHoaDon";
-            this.groupHoaDon.Size = new Size(782, 451);
+            this.groupHoaDon.Size = new Size(782, 460);
             this.groupHoaDon.TabIndex = 0;
             this.groupHoaDon.TabStop = false;
             this.groupHoaDon.Text = "Chi tiết hóa đơn";
@@ -314,12 +311,9 @@ namespace QuanLyQuanNet.Forms
             this.dgvChiTietHoaDon.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvChiTietHoaDon.Dock = DockStyle.Fill;
             this.dgvChiTietHoaDon.Location = new Point(3, 19);
-            this.dgvChiTietHoaDon.MultiSelect = false;
             this.dgvChiTietHoaDon.Name = "dgvChiTietHoaDon";
-            this.dgvChiTietHoaDon.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            this.dgvChiTietHoaDon.Size = new Size(776, 279);
+            this.dgvChiTietHoaDon.Size = new Size(776, 300);
             this.dgvChiTietHoaDon.TabIndex = 0;
-            this.dgvChiTietHoaDon.KeyDown += new KeyEventHandler(this.dgvChiTietHoaDon_KeyDown);
 
             // panel2
             this.panel2.Controls.Add(this.btnThanhToan);
@@ -330,91 +324,85 @@ namespace QuanLyQuanNet.Forms
             this.panel2.Controls.Add(this.txtTienDichVu);
             this.panel2.Controls.Add(this.lblTienDichVu);
             this.panel2.Dock = DockStyle.Bottom;
-            this.panel2.Location = new Point(3, 298);
+            this.panel2.Location = new Point(3, 319);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new Size(776, 150);
+            this.panel2.Size = new Size(776, 138);
             this.panel2.TabIndex = 1;
 
             // lblTienDichVu
             this.lblTienDichVu.AutoSize = true;
-            this.lblTienDichVu.Location = new Point(20, 20);
+            this.lblTienDichVu.Location = new Point(10, 10);
             this.lblTienDichVu.Name = "lblTienDichVu";
-            this.lblTienDichVu.Size = new Size(85, 17);
+            this.lblTienDichVu.Size = new Size(80, 17);
             this.lblTienDichVu.TabIndex = 0;
             this.lblTienDichVu.Text = "Tiền dịch vụ:";
 
             // txtTienDichVu
-            this.txtTienDichVu.Font = new Font("Microsoft Sans Serif", 11F, FontStyle.Bold);
-            this.txtTienDichVu.ForeColor = Color.Orange;
-            this.txtTienDichVu.Location = new Point(120, 17);
+            this.txtTienDichVu.Location = new Point(100, 7);
             this.txtTienDichVu.Name = "txtTienDichVu";
             this.txtTienDichVu.ReadOnly = true;
-            this.txtTienDichVu.Size = new Size(150, 24);
+            this.txtTienDichVu.Size = new Size(150, 23);
             this.txtTienDichVu.TabIndex = 1;
 
             // lblTongTien
             this.lblTongTien.AutoSize = true;
-            this.lblTongTien.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
-            this.lblTongTien.Location = new Point(20, 60);
+            this.lblTongTien.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Bold, GraphicsUnit.Point);
+            this.lblTongTien.Location = new Point(10, 45);
             this.lblTongTien.Name = "lblTongTien";
-            this.lblTongTien.Size = new Size(95, 20);
+            this.lblTongTien.Size = new Size(84, 17);
             this.lblTongTien.TabIndex = 2;
-            this.lblTongTien.Text = "TỔNG TIỀN:";
+            this.lblTongTien.Text = "Tổng tiền:";
 
             // txtTongTien
-            this.txtTongTien.Font = new Font("Microsoft Sans Serif", 14F, FontStyle.Bold);
-            this.txtTongTien.ForeColor = Color.Red;
-            this.txtTongTien.Location = new Point(120, 57);
+            this.txtTongTien.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Bold, GraphicsUnit.Point);
+            this.txtTongTien.Location = new Point(100, 42);
             this.txtTongTien.Name = "txtTongTien";
             this.txtTongTien.ReadOnly = true;
-            this.txtTongTien.Size = new Size(200, 29);
+            this.txtTongTien.Size = new Size(150, 23);
             this.txtTongTien.TabIndex = 3;
 
-            // btnThanhToan
-            this.btnThanhToan.BackColor = Color.FromArgb(39, 174, 96);
-            this.btnThanhToan.FlatStyle = FlatStyle.Flat;
-            this.btnThanhToan.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
-            this.btnThanhToan.ForeColor = Color.White;
-            this.btnThanhToan.Location = new Point(400, 20);
-            this.btnThanhToan.Name = "btnThanhToan";
-            this.btnThanhToan.Size = new Size(120, 40);
-            this.btnThanhToan.TabIndex = 4;
-            this.btnThanhToan.Text = "Thanh toán";
-            this.btnThanhToan.UseVisualStyleBackColor = false;
-            this.btnThanhToan.Click += new EventHandler(this.btnThanhToan_Click);
+            // btnHuyHoaDon
+            this.btnHuyHoaDon.BackColor = Color.FromArgb(245, 61, 61);
+            this.btnHuyHoaDon.FlatStyle = FlatStyle.Flat;
+            this.btnHuyHoaDon.ForeColor = Color.White;
+            this.btnHuyHoaDon.Location = new Point(10, 80);
+            this.btnHuyHoaDon.Name = "btnHuyHoaDon";
+            this.btnHuyHoaDon.Size = new Size(100, 35);
+            this.btnHuyHoaDon.TabIndex = 4;
+            this.btnHuyHoaDon.Text = "Hủy";
+            this.btnHuyHoaDon.UseVisualStyleBackColor = false;
+            this.btnHuyHoaDon.Click += new EventHandler(this.btnHuyHoaDon_Click);
 
             // btnInHoaDon
-            this.btnInHoaDon.BackColor = Color.FromArgb(52, 152, 219);
+            this.btnInHoaDon.BackColor = Color.FromArgb(52, 144, 220);
             this.btnInHoaDon.FlatStyle = FlatStyle.Flat;
-            this.btnInHoaDon.Font = new Font("Microsoft Sans Serif", 10F);
             this.btnInHoaDon.ForeColor = Color.White;
-            this.btnInHoaDon.Location = new Point(400, 70);
+            this.btnInHoaDon.Location = new Point(120, 80);
             this.btnInHoaDon.Name = "btnInHoaDon";
-            this.btnInHoaDon.Size = new Size(120, 35);
+            this.btnInHoaDon.Size = new Size(100, 35);
             this.btnInHoaDon.TabIndex = 5;
             this.btnInHoaDon.Text = "In hóa đơn";
             this.btnInHoaDon.UseVisualStyleBackColor = false;
             this.btnInHoaDon.Click += new EventHandler(this.btnInHoaDon_Click);
 
-            // btnHuyHoaDon
-            this.btnHuyHoaDon.BackColor = Color.FromArgb(231, 76, 60);
-            this.btnHuyHoaDon.FlatStyle = FlatStyle.Flat;
-            this.btnHuyHoaDon.Font = new Font("Microsoft Sans Serif", 10F);
-            this.btnHuyHoaDon.ForeColor = Color.White;
-            this.btnHuyHoaDon.Location = new Point(530, 70);
-            this.btnHuyHoaDon.Name = "btnHuyHoaDon";
-            this.btnHuyHoaDon.Size = new Size(120, 35);
-            this.btnHuyHoaDon.TabIndex = 6;
-            this.btnHuyHoaDon.Text = "Hủy hóa đơn";
-            this.btnHuyHoaDon.UseVisualStyleBackColor = false;
-            this.btnHuyHoaDon.Click += new EventHandler(this.btnHuyHoaDon_Click);
+            // btnThanhToan
+            this.btnThanhToan.BackColor = Color.FromArgb(40, 167, 69);
+            this.btnThanhToan.FlatStyle = FlatStyle.Flat;
+            this.btnThanhToan.ForeColor = Color.White;
+            this.btnThanhToan.Location = new Point(230, 80);
+            this.btnThanhToan.Name = "btnThanhToan";
+            this.btnThanhToan.Size = new Size(100, 35);
+            this.btnThanhToan.TabIndex = 6;
+            this.btnThanhToan.Text = "Thanh toán";
+            this.btnThanhToan.UseVisualStyleBackColor = false;
+            this.btnThanhToan.Click += new EventHandler(this.btnThanhToan_Click);
 
             // tabQuanLyHoaDon
             this.tabQuanLyHoaDon.Controls.Add(this.panel3);
-            this.tabQuanLyHoaDon.Location = new Point(4, 25);
+            this.tabQuanLyHoaDon.Location = new Point(4, 26);
             this.tabQuanLyHoaDon.Name = "tabQuanLyHoaDon";
             this.tabQuanLyHoaDon.Padding = new Padding(3);
-            this.tabQuanLyHoaDon.Size = new Size(1392, 661);
+            this.tabQuanLyHoaDon.Size = new Size(1392, 670);
             this.tabQuanLyHoaDon.TabIndex = 1;
             this.tabQuanLyHoaDon.Text = "Quản lý hóa đơn";
             this.tabQuanLyHoaDon.UseVisualStyleBackColor = true;
@@ -425,16 +413,16 @@ namespace QuanLyQuanNet.Forms
             this.panel3.Dock = DockStyle.Fill;
             this.panel3.Location = new Point(3, 3);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new Size(1386, 655);
+            this.panel3.Size = new Size(1386, 664);
             this.panel3.TabIndex = 0;
 
             // groupTimKiem
-            this.groupTimKiem.Controls.Add(this.dtpDenNgay);
-            this.groupTimKiem.Controls.Add(this.dtpTuNgay);
-            this.groupTimKiem.Controls.Add(this.lblDenNgay);
-            this.groupTimKiem.Controls.Add(this.lblTuNgay);
-            this.groupTimKiem.Controls.Add(this.btnTimKiem);
             this.groupTimKiem.Controls.Add(this.btnLamMoi);
+            this.groupTimKiem.Controls.Add(this.btnTimKiem);
+            this.groupTimKiem.Controls.Add(this.lblDenNgay);
+            this.groupTimKiem.Controls.Add(this.dtpDenNgay);
+            this.groupTimKiem.Controls.Add(this.lblTuNgay);
+            this.groupTimKiem.Controls.Add(this.dtpTuNgay);
             this.groupTimKiem.Dock = DockStyle.Top;
             this.groupTimKiem.Location = new Point(0, 0);
             this.groupTimKiem.Name = "groupTimKiem";
@@ -452,46 +440,44 @@ namespace QuanLyQuanNet.Forms
             this.lblTuNgay.Text = "Từ ngày:";
 
             // dtpTuNgay
-            this.dtpTuNgay.Format = DateTimePickerFormat.Short;
             this.dtpTuNgay.Location = new Point(90, 27);
             this.dtpTuNgay.Name = "dtpTuNgay";
-            this.dtpTuNgay.Size = new Size(120, 23);
+            this.dtpTuNgay.Size = new Size(200, 23);
             this.dtpTuNgay.TabIndex = 1;
 
             // lblDenNgay
             this.lblDenNgay.AutoSize = true;
-            this.lblDenNgay.Location = new Point(230, 30);
+            this.lblDenNgay.Location = new Point(320, 30);
             this.lblDenNgay.Name = "lblDenNgay";
-            this.lblDenNgay.Size = new Size(71, 17);
+            this.lblDenNgay.Size = new Size(70, 17);
             this.lblDenNgay.TabIndex = 2;
             this.lblDenNgay.Text = "Đến ngày:";
 
             // dtpDenNgay
-            this.dtpDenNgay.Format = DateTimePickerFormat.Short;
-            this.dtpDenNgay.Location = new Point(310, 27);
+            this.dtpDenNgay.Location = new Point(396, 27);
             this.dtpDenNgay.Name = "dtpDenNgay";
-            this.dtpDenNgay.Size = new Size(120, 23);
+            this.dtpDenNgay.Size = new Size(200, 23);
             this.dtpDenNgay.TabIndex = 3;
 
             // btnTimKiem
-            this.btnTimKiem.BackColor = Color.FromArgb(52, 152, 219);
+            this.btnTimKiem.BackColor = Color.FromArgb(52, 144, 220);
             this.btnTimKiem.FlatStyle = FlatStyle.Flat;
             this.btnTimKiem.ForeColor = Color.White;
-            this.btnTimKiem.Location = new Point(450, 25);
+            this.btnTimKiem.Location = new Point(620, 25);
             this.btnTimKiem.Name = "btnTimKiem";
-            this.btnTimKiem.Size = new Size(80, 28);
+            this.btnTimKiem.Size = new Size(100, 30);
             this.btnTimKiem.TabIndex = 4;
             this.btnTimKiem.Text = "Tìm kiếm";
             this.btnTimKiem.UseVisualStyleBackColor = false;
             this.btnTimKiem.Click += new EventHandler(this.btnTimKiem_Click);
 
             // btnLamMoi
-            this.btnLamMoi.BackColor = Color.FromArgb(149, 165, 166);
+            this.btnLamMoi.BackColor = Color.FromArgb(108, 117, 125);
             this.btnLamMoi.FlatStyle = FlatStyle.Flat;
             this.btnLamMoi.ForeColor = Color.White;
-            this.btnLamMoi.Location = new Point(540, 25);
+            this.btnLamMoi.Location = new Point(730, 25);
             this.btnLamMoi.Name = "btnLamMoi";
-            this.btnLamMoi.Size = new Size(80, 28);
+            this.btnLamMoi.Size = new Size(100, 30);
             this.btnLamMoi.TabIndex = 5;
             this.btnLamMoi.Text = "Làm mới";
             this.btnLamMoi.UseVisualStyleBackColor = false;
@@ -509,7 +495,7 @@ namespace QuanLyQuanNet.Forms
             this.dgvDanhSachHoaDon.Name = "dgvDanhSachHoaDon";
             this.dgvDanhSachHoaDon.ReadOnly = true;
             this.dgvDanhSachHoaDon.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            this.dgvDanhSachHoaDon.Size = new Size(1386, 575);
+            this.dgvDanhSachHoaDon.Size = new Size(1386, 584);
             this.dgvDanhSachHoaDon.TabIndex = 1;
             this.dgvDanhSachHoaDon.DoubleClick += new EventHandler(this.dgvDanhSachHoaDon_DoubleClick);
 
@@ -518,13 +504,13 @@ namespace QuanLyQuanNet.Forms
             this.timer.Tick += new EventHandler(this.timer_Tick);
 
             // FormHoaDon
-            this.AutoScaleDimensions = new SizeF(6F, 13F);
+            this.AutoScaleDimensions = new SizeF(8F, 17F);
             this.AutoScaleMode = AutoScaleMode.Font;
             this.ClientSize = new Size(1400, 750);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.panel1);
             this.Name = "FormHoaDon";
-            this.Text = "Quản lý Hóa đơn";
+            this.Text = "Quản lý hóa đơn";
             this.WindowState = FormWindowState.Maximized;
             this.Load += new EventHandler(this.FormHoaDon_Load);
 
@@ -565,9 +551,7 @@ namespace QuanLyQuanNet.Forms
         private Label lblTitle;
         private TabControl tabControl;
         private TabPage tabHoaDonMoi;
-        private TabPage tabQuanLyHoaDon;
         private SplitContainer splitContainer1;
-        private SplitContainer splitContainer2;
         private GroupBox groupMayTram;
         private DataGridView dgvMayTram;
         private GroupBox groupThongTinKhach;
@@ -591,15 +575,17 @@ namespace QuanLyQuanNet.Forms
         private Label lblTienDichVu;
         private TextBox txtTongTien;
         private Label lblTongTien;
-        private Button btnThanhToan;
-        private Button btnInHoaDon;
         private Button btnHuyHoaDon;
+        private Button btnInHoaDon;
+        private Button btnThanhToan;
+        private TabPage tabQuanLyHoaDon;
         private DateTimePicker dtpTuNgay;
         private Label lblTuNgay;
         private DateTimePicker dtpDenNgay;
         private Label lblDenNgay;
         private Button btnTimKiem;
         private Button btnLamMoi;
+        private SplitContainer splitContainer2;
         private System.Windows.Forms.Timer timer;
     }
 }
