@@ -15,15 +15,10 @@ namespace QuanLyQuanNet.Data.Repositories
             return await context.Set<NhanVien>().FirstOrDefaultAsync(n => n.Username == username);
         }
 
-        public async Task<bool> UsernameExistsAsync(string username)
+        public async Task<bool> IsUsernameExistsAsync(string username)
         {
             using var context = await _contextFactory.CreateDbContextAsync();
             return await context.Set<NhanVien>().AnyAsync(n => n.Username == username);
-        }
-
-        public async Task<bool> IsUsernameExistsAsync(string username)
-        {
-            return await UsernameExistsAsync(username);
         }
 
         public async Task<NhanVien?> AuthenticateAsync(string username, string password)
